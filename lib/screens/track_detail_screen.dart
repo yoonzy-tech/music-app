@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:intl/intl.dart';
 import '../models/track.dart';
 
 class TrackDetailScreen extends StatefulWidget {
@@ -137,7 +138,7 @@ class _TrackDetailScreenState extends State<TrackDetailScreen> {
                     _buildInfoRow(
                       Icons.calendar_today,
                       'Release Date',
-                      '${widget.track.releaseDate!.year}-${widget.track.releaseDate!.month.toString().padLeft(2, '0')}-${widget.track.releaseDate!.day.toString().padLeft(2, '0')}',
+                      DateFormat('yyyy-MM-dd').format(widget.track.releaseDate!),
                     ),
                   ],
                   if (widget.track.previewUrl != null) ...[
@@ -162,7 +163,10 @@ class _TrackDetailScreenState extends State<TrackDetailScreen> {
       );
     }
 
-    final highResUrl = widget.track.artworkUrl100!.replaceAll('100x100', '600x600');
+    String highResUrl = widget.track.artworkUrl100!;
+    if (highResUrl.contains('100x100')) {
+      highResUrl = highResUrl.replaceAll('100x100', '600x600');
+    }
 
     return CachedNetworkImage(
       imageUrl: highResUrl,
